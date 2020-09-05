@@ -1,9 +1,14 @@
-<div style="width: 920px; margin: 0 auto; padding-top: 20px;">
+<div style="width: 920px; margin: 0 auto; padding-top: 20px;" *ngIf="supportsMidi">
   <mat-form-field>
     <mat-label>MIDI Device</mat-label>
-    <mat-select>
-      <mat-option value="1">Test</mat-option>
-      <mat-option value="2">Material</mat-option>
+    <mat-select (selectionChange)="onMidiChanged($event.value)">
+      <mat-option *ngFor="let input of inputs; let i = index" value="{{i}}">{{input.name}}</mat-option>
     </mat-select>
   </mat-form-field>
+  <div style="width:100%">
+    <div *ngFor="let message of messages">{{message}}</div>
+  </div>
+</div>
+<div style="width: 920px; margin: 0 auto; padding-top: 20px;" *ngIf="!supportsMidi">
+  Your browser does not support WebMidi.
 </div>
