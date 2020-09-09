@@ -28,7 +28,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.ctx.lineWidth = 5;
     this.notesOn.forEach(x => {
       this.ctx.beginPath();
-      this.ctx.arc(200, this.getMidiNoteVerticalPos(x), 8, 0, 2 * Math.PI);
+      this.ctx.arc(200, this.getMidiNoteVerticalPos(x), 14, 0, 2 * Math.PI);
       this.ctx.stroke();
     })
     this.ctx.strokeStyle = '';
