@@ -13,13 +13,25 @@ export class AppComponent implements OnInit, AfterViewInit {
   title = 'learn-piano';
   supportsMidi: boolean;
   inputs: WebMidi.MIDIInput[] = [];
+  bpm: number = 60;
+  playMetronome: boolean = false;
+
+  private metronome: Tone.Player;
   private synth: Tone.PolySynth;
   private selectedInput: number;
   private ctx: CanvasRenderingContext2D;
   private imgStaff: HTMLImageElement;
   private notesOn: number[] = [];
 
+
   constructor(private zone: NgZone) { }
+
+  tickMetronome() {
+    if (this.playMetronome) {
+      this.metronome.start(Tone.now());
+      setTimeout(() => this.tickMetronome(), 60000 / this.bpm);
+    }
+  }
 
   drawFrame() {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
@@ -33,6 +45,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     })
     this.ctx.strokeStyle = '';
     requestAnimationFrame(this.drawFrame.bind(this));
+  }
+
+  toggleMetronome() {
+    this.playMetronome = !this.playMetronome;
+    if (this.playMetronome && this.metronome != null) {
+      this.tickMetronome();
+    }
   }
 
   ngAfterViewInit() {
@@ -147,6 +166,12 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.synth = new Tone.PolySynth().toDestination();
       Tone.context.lookAhead = 0;
       this.synth.volume.value = -20;
+      this.metronome = new Tone.Player("assets/woodblock.wav").toDestination();
+      this.metronome.volume.value = -20;
+      this.metronome.context.lookAhead = 0;
+      if (this.playMetronome) {
+        setTimeout(() => this.tickMetronome(), 60000 / this.bpm);
+      }
     }
     this.inputs[index].onmidimessage = (message => {
       this.zone.run(() => {

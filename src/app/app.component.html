@@ -5,6 +5,8 @@
       <mat-option *ngFor="let input of inputs; let i = index" value="{{i}}">{{input.name}}</mat-option>
     </mat-select>
   </mat-form-field>
+  <mat-slider [(ngModel)]="bpm" min="30" max="200" thumbLabel="true"></mat-slider>
+  <mat-checkbox value="true" (change)="toggleMetronome()">Enable Metronome</mat-checkbox>
   <canvas #canvasElement width="1280" height="800"></canvas>
 </div>
 <div style="width: 920px; margin: 0 auto; padding-top: 20px;" *ngIf="!supportsMidi">
